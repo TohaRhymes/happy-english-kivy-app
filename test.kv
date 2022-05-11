@@ -1,0 +1,33 @@
+<MyLayout>:
+    orientation: 'vertical'
+    label: label_id
+    video: video_id
+    text_input: input_id
+
+    BoxLayout:
+        size_hint: 1, 0.2
+        orientation: 'horizontal'
+
+        TextInput:
+            id: input_id
+            text: 'Print smth here'
+        BoxLayout:
+            Button:
+                text: 'Previous'
+                on_press: root.prev_text()
+            Button:
+                text: 'Search'
+                on_press: root.search()
+            Button:
+                text: 'Next'
+                on_press: root.next_text()
+
+    BoxLayout:
+        TextInput:
+            id: label_id
+            text: 'Try to search'
+        TextInput:
+            id: video_id
+            text: 'Try to search'
+
+
