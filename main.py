@@ -1,11 +1,22 @@
+import os
+
 from kivy.app import App
 from kivy.properties import ObjectProperty
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.videoplayer import VideoPlayer
 
 from collections import deque
 
 import database
+
+os.environ['KIVY_VIDEO'] = 'ffpyplayer'
+
+
+def time_to_ms(time: int) -> (int, int):
+    m = str(time // 60).rjust(2, '0')
+    s = str(time % 60 + 1).rjust(2, '0')
+    return m, s
 
 
 class MyLayout(BoxLayout):
@@ -21,12 +32,18 @@ class MyLayout(BoxLayout):
     def rotate(self, step=1):
         self.content_generator.rotate(step)
         el = self.content_generator[0]
-        self.label.text = el['content']
-        self.video.text = '\n\n\n' + el['link']
+
+        video_link, time = el['link'].split('#t=')
+        start, finish = map(time_to_ms, list(map(int, time.split(','))))
+
+        self.label.text = f"{el['content']}\n\n" \
+                          f"Start time: {':'.join(start)}\n" \
+                          f"End time: {':'.join(finish)}"
+        self.video.source = video_link
 
     def nothing(self):
         self.label.text = 'NOTHING FOUND'
-        self.video.text = ''
+        self.video.source = ''
 
     def next_text(self):
         if len(self.content) > 0:
